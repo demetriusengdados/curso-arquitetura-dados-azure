@@ -1,0 +1,21 @@
+pip install pre-commit
+pre-commit install
+
+
+repos:
+  - repo: https://github.com/psf/black
+    rev: 23.9.1
+    hooks:
+      - id: black
+  - repo: https://github.com/pre-commit/mirrors-flake8
+    rev: v6.1.0
+    hooks:
+      - id: flake8
+  - repo: https://github.com/pycqa/bandit
+    rev: 1.7.5
+    hooks:
+      - id: bandit
+  - repo: https://github.com/pre-commit/mirrors-pylint
+    rev: v3.0.0
+    hooks:
+      - id: pylint

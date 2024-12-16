@@ -1,0 +1,92 @@
+{
+  "name": "MongoDB_to_Oracle_ETL",
+  "properties": {
+    "activities": [
+      {
+        "name": "ExtractDataFromMongoDB",
+        "type": "Copy",
+        "dependsOn": [],
+        "userProperties": [],
+        "typeProperties": {
+          "source": {
+            "type": "MongoDbAtlasSource",
+            "query": "{}"
+          },
+          "sink": {
+            "type": "BlobSink",
+            "writeBatchSize": 10000,
+            "writeBatchTimeout": "00:01:00"
+          }
+        },
+        "inputs": [
+          {
+            "referenceName": "MongoDB_Dataset",
+            "type": "DatasetReference"
+          }
+        ],
+        "outputs": [
+          {
+            "referenceName": "RawData_Blob_Dataset",
+            "type": "DatasetReference"
+          }
+        ]
+      },
+      {
+        "name": "TransformData",
+        "type": "DataFlow",
+        "dependsOn": [
+          {
+            "activity": "ExtractDataFromMongoDB",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ],
+        "userProperties": [],
+        "typeProperties": {
+          "dataFlow": {
+            "referenceName": "TransformMongoData",
+            "type": "DataFlowReference"
+          }
+        }
+      },
+      {
+        "name": "LoadDataToOracle",
+        "type": "Copy",
+        "dependsOn": [
+          {
+            "activity": "TransformData",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ],
+        "userProperties": [],
+        "typeProperties": {
+          "source": {
+            "type": "BlobSource"
+          },
+          "sink": {
+            "type": "OracleSink",
+            "writeBatchSize": 1000,
+            "writeBatchTimeout": "00:01:00"
+          }
+        },
+        "inputs": [
+          {
+            "referenceName": "TransformedData_Dataset",
+            "type": "DatasetReference"
+          }
+        ],
+        "outputs": [
+          {
+            "referenceName": "Oracle_Dataset",
+            "type": "DatasetReference"
+          }
+        ]
+      }
+    ],
+    "annotations": []
+  },
+  "type": "Microsoft.DataFactory/factories/pipelines"
+}

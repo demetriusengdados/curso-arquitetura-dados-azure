@@ -1,0 +1,35 @@
+name: Quality Checks
+
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: "3.9"
+
+    - name: Install dependencies
+      run: |
+        pip install flake8 bandit pytest pytest-cov pip-audit pylint
+
+    - name: Run flake8 (PEP8 check)
+      run: flake8 your_project_directory --max-line-length=88
+
+    - name: Run bandit (Security check)
+      run: bandit -r your_project_directory
+
+    - name: Run pytest with coverage
+      run: pytest --cov=your_project_directory --cov-report=xml
+
+    - name: Run pylint (Code quality)
+      run: pylint your_project_directory
+
+    - name: Audit dependencies
+      run: pip-audit
