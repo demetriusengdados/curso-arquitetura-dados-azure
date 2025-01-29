@@ -1,11 +1,15 @@
-from faker import Faker
-import random
+import os
 import csv
+import random
+from faker import Faker
 
-# Inicializar Faker
 def generate_fake_data():
     fake = Faker()
-
+    
+    # Diretório de saída
+    output_dir = "output_files"
+    os.makedirs(output_dir, exist_ok=True)
+    
     # Quantidade de registros
     num_produtos = 500
     num_clientes = 1000
@@ -32,7 +36,6 @@ def generate_fake_data():
 
     # Geração de dados para a tabela dim_tempo
     tempos = []
-    base_date = fake.date_this_year()
     for tempo_id in range(1, num_tempos + 1):
         data = fake.date_between(start_date="-1y", end_date="today")
         ano = data.year
@@ -51,9 +54,10 @@ def generate_fake_data():
         valor_total = round(quantidade * produtos[produto_id - 1][3], 2)  # preço x quantidade
         vendas.append([venda_id, cliente_id, produto_id, tempo_id, quantidade, valor_total])
 
-    # Salvar dados em arquivos CSV
+    # Função para salvar arquivos CSV
     def save_to_csv(filename, headers, data):
-        with open(filename, 'w', newline='', encoding='utf-8') as file:
+        filepath = os.path.join(output_dir, filename)
+        with open(filepath, 'w', newline='', encoding='utf-8') as file:
             writer = csv.writer(file)
             writer.writerow(headers)
             writer.writerows(data)
@@ -63,8 +67,7 @@ def generate_fake_data():
     save_to_csv("dim_tempo.csv", ["tempo_id", "data", "ano", "mes", "dia", "trimestre"], tempos)
     save_to_csv("fato_vendas.csv", ["venda_id", "cliente_id", "produto_id", "tempo_id", "quantidade", "valor_total"], vendas)
 
-    print("Arquivos CSV gerados com sucesso!")
+    print("Arquivos CSV gerados com sucesso na pasta output_files!")
 
 # Executar geração de dados
 generate_fake_data()
-
