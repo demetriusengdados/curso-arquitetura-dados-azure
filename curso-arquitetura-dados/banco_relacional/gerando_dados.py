@@ -70,4 +70,4 @@ def generate_fake_data():
     print("Arquivos CSV gerados com sucesso na pasta output_files!")
 
 # Executar geração de dados
-generate_fake_data()
+generate_fake_data()  
