@@ -1,6 +1,5 @@
 import os
 import pyodbc
-import pandas as pd
 
 # Configurações do banco de dados
 server = 'SEU_SERVIDOR'
