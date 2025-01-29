@@ -1,0 +1,18 @@
+-- Criação da tabela de exemplo
+CREATE TABLE exemplo_tabela (
+    id NUMBER PRIMARY KEY,
+    nome VARCHAR2(50),
+    data_criacao DATE
+);
+
+-- Script para inserir 1000 registros
+BEGIN
+    FOR i IN 1..1000 LOOP
+        INSERT INTO exemplo_tabela (id, nome, data_criacao)
+        VALUES (i, 'Nome_' || i, SYSDATE);
+    END LOOP;
+
+    -- Confirma a transação
+    COMMIT;
+END;
+/
